@@ -1,46 +1,46 @@
 ﻿using System.Collections.Generic;
+using UnityEditor.Search;
 using UnityEngine;
 
 public class TilesHolder: MonoBehaviour 
 {
-    private Dictionary<string, List<GameObject>> _instantiatedTilesDictionary;
-    private Dictionary<Vector3, GameObject> _activeTilesByPositionDictionary;
+    private Dictionary<string, Queue<GameObject>> _inactiveTilesPools;
+    private Dictionary<Vector3, GameObject> _activeTilesByPosition;
 
     public void Innit()
     {
-        _activeTilesByPositionDictionary = new();
-        _instantiatedTilesDictionary = new();
+        _activeTilesByPosition = new();
+        _inactiveTilesPools = new();
     }
 
     public GameObject CreateTile(Vector3 position, GameObject prefab)
     {
         //Check if position is busy
-        if (_activeTilesByPositionDictionary.ContainsKey(position))
+        if (_activeTilesByPosition.ContainsKey(position))
         {
             HideTile(position);
         }
 
-        var listOfTiles = _instantiatedTilesDictionary.GetValueOrDefault(prefab.name);
-        GameObject tile;
-
-        if(listOfTiles == null)
+        if(!_inactiveTilesPools.TryGetValue(prefab.name, out var pool))
         {
-            listOfTiles = new List<GameObject>();
-            _instantiatedTilesDictionary.Add(prefab.name, listOfTiles);
+            pool = new Queue<GameObject>();
+            _inactiveTilesPools.Add(prefab.name, pool);
         }
 
-        if (TryFindInactiveTile(listOfTiles, out var foundTile)) 
+        GameObject tile;
+        if (TryFindInactiveTile(pool, out var foundTile)) 
         { 
             tile = foundTile;
+            pool.Dequeue();
             ActiveTile(position, tile);
         }
         else
         {
             tile = InstantiateTile(position, prefab);
-            listOfTiles.Add(tile);
         }
 
-        _activeTilesByPositionDictionary.Add(position, tile);
+         pool.Enqueue(tile);
+        _activeTilesByPosition.Add(position, tile);
         return tile;
     }
 
@@ -48,14 +48,16 @@ public class TilesHolder: MonoBehaviour
     {
         tile.transform.position = position;
         tile.SetActive(true);
+        tile.name = $"Tile: {position}";
     }
 
     public void HideTile(Vector3 position)
     {
-        var tile = _activeTilesByPositionDictionary[position];
-        _activeTilesByPositionDictionary.Remove(position);
-
-        tile.SetActive(false);
+        if (_activeTilesByPosition.TryGetValue(position, out var foundTile))
+        {
+            _activeTilesByPosition.Remove(position);
+            foundTile.SetActive(false);
+        }
     }
 
     private bool TryFindInactiveTile(List<GameObject> tiles, out GameObject foundTile)
@@ -70,6 +72,25 @@ public class TilesHolder: MonoBehaviour
             }
         }
         return false;
+    }
+
+    private bool TryFindInactiveTile(Queue<GameObject> tiles, out GameObject foundTile)
+    {
+        foundTile = null;
+        if (tiles.Count == 0) return false;
+
+        var tile = tiles.Peek();
+
+        if (tile.activeSelf)
+        {
+            foundTile = null;
+            return false;
+        }
+        else
+        {
+            foundTile = tile;
+            return true;
+        }
     }
 
     private GameObject InstantiateTile(Vector3 position, GameObject prefab)

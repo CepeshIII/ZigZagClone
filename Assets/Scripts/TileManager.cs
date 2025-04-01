@@ -4,13 +4,13 @@ using System.Linq;
 using UnityEngine;
 using System.Collections;
 using Random = UnityEngine.Random;
-using static UnityEditor.PlayerSettings;
 
 public class TileManager: MonoBehaviour
 {
     private Queue<Vector3> _tilesPos;
 
     private TilesHolder _tilesHolder;
+    private Vector3 _lastTilePosition;
 
     [SerializeField] private GameObject prefab;
     [SerializeField] private Player player;
@@ -58,7 +58,7 @@ public class TileManager: MonoBehaviour
     {
         _tilesPos.Enqueue(pos);
         _tilesHolder.CreateTile(pos, prefab);
-
+        _lastTilePosition = pos;
     }
 
     public void DeleteFirstTile()
@@ -76,7 +76,7 @@ public class TileManager: MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            var lastPos = _tilesPos.Last();
+            var lastPos = _lastTilePosition;
             var newPos = lastPos + _moveDirections[Random.Range(0, 2)];
 
             AddTile(newPos, prefab);
@@ -96,7 +96,7 @@ public class TileManager: MonoBehaviour
             {
 
             }
-            else if(Vector3.Distance(_tilesPos.Last(), player.transform.position) < distanceForCreateTiles)
+            else if(Vector3.Distance(_lastTilePosition, player.transform.position) < distanceForCreateTiles)
             {
                 Generate(1);
             }

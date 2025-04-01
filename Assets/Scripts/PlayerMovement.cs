@@ -5,42 +5,49 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour, IMovable
 {
-    [SerializeField] Rigidbody rb;
-    [SerializeField] float speed;
-    [SerializeField] Animator animator;
-    [SerializeField] LayerMask groundLayerMask;
-    [SerializeField] CapsuleCollider collider;
+    [SerializeField] private Rigidbody _rb;
+    [SerializeField] private float _speed;
+    [SerializeField] private float _angularSpeed;
+    [SerializeField] private Animator _animator;
+    [SerializeField] private LayerMask _groundLayerMask;
+    [SerializeField] private CapsuleCollider _collider;
+    [SerializeField] private Vector3 _forwardDirection;
 
-    private RaycastHit hit;
+    private RaycastHit _hit;
 
     private void OnEnable()
     {
-        rb = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
-        collider = GetComponent<CapsuleCollider>();
+        _rb = GetComponent<Rigidbody>();
+        _animator = GetComponentInChildren<Animator>();
+        _collider = GetComponent<CapsuleCollider>();
+    }
+
+    private void FixedUpdate()
+    {
+        _rb.MoveRotation(Quaternion.RotateTowards(_rb.rotation, Quaternion.LookRotation(_forwardDirection), _angularSpeed));
     }
 
     public void ChangeDirection(Vector3 direction)
     {
-        rb.MoveRotation(Quaternion.LookRotation(direction));
+        _forwardDirection = direction;
     }
 
     public void Move(float speedMultiplier)
     {
-        var newPosition = rb.position + speed * speedMultiplier * Time.deltaTime * transform.forward;
-        rb.Move(newPosition, rb.rotation);
+        var newPosition = _rb.position + _speed * speedMultiplier * Time.deltaTime * _forwardDirection;
+        _rb.Move(newPosition, _rb.rotation);
 
-        animator.SetFloat("HorizontalSpeed", speedMultiplier);
+        _animator.SetFloat("HorizontalSpeed", speedMultiplier);
 
-        animator.SetBool("Falling", Mathf.Abs(rb.linearVelocity.y) > 1f);
+        _animator.SetBool("Falling", Mathf.Abs(_rb.linearVelocity.y) > 1f);
     }
 
     public bool IsGrounded()
     {
-        var position = collider.bounds.center;
+        var position = _collider.bounds.center;
         var direction = Vector3.down;
 
-        var IsGrounded = Physics.Raycast(position, direction, out hit, Mathf.Infinity, groundLayerMask);
+        var IsGrounded = Physics.Raycast(position, direction, out _hit, Mathf.Infinity, _groundLayerMask);
         return IsGrounded;
     }
 
