@@ -6,7 +6,7 @@ public class TilesHolder: MonoBehaviour
     private Dictionary<string, List<GameObject>> _instantiatedTilesDictionary;
     private Dictionary<Vector3, GameObject> _activeTilesByPositionDictionary;
 
-    private void Start()
+    public void Innit()
     {
         _activeTilesByPositionDictionary = new();
         _instantiatedTilesDictionary = new();
@@ -14,7 +14,13 @@ public class TilesHolder: MonoBehaviour
 
     public GameObject CreateTile(Vector3 position, GameObject prefab)
     {
-        var listOfTiles = _instantiatedTilesDictionary[prefab.name];
+        //Check if position is busy
+        if (_activeTilesByPositionDictionary.ContainsKey(position))
+        {
+            HideTile(position);
+        }
+
+        var listOfTiles = _instantiatedTilesDictionary.GetValueOrDefault(prefab.name);
         GameObject tile;
 
         if(listOfTiles == null)
@@ -26,6 +32,7 @@ public class TilesHolder: MonoBehaviour
         if (TryFindInactiveTile(listOfTiles, out var foundTile)) 
         { 
             tile = foundTile;
+            ActiveTile(position, tile);
         }
         else
         {
@@ -35,6 +42,12 @@ public class TilesHolder: MonoBehaviour
 
         _activeTilesByPositionDictionary.Add(position, tile);
         return tile;
+    }
+
+    public void ActiveTile(Vector3 position, GameObject tile)
+    {
+        tile.transform.position = position;
+        tile.SetActive(true);
     }
 
     public void HideTile(Vector3 position)
@@ -50,7 +63,7 @@ public class TilesHolder: MonoBehaviour
         foundTile = null;
         foreach (var tile in tiles) 
         {
-            if (tile.activeSelf)
+            if (!tile.activeSelf)
             {
                 foundTile = tile;
                 return true;

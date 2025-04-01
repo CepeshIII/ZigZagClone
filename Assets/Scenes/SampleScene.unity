@@ -305,8 +305,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 8492012615922405587, guid: 5c37651ddb4a8544482ebe7739c0e6a9, type: 3}
   player: {fileID: 1352238405}
-  distanceForDeleteTiles: 8
-  distanceForCreateTiles: 5
+  distanceForDeleteTiles: 10
+  distanceForCreateTiles: 10
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0

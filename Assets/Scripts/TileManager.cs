@@ -9,7 +9,6 @@ using static UnityEditor.PlayerSettings;
 public class TileManager: MonoBehaviour
 {
     private Queue<Vector3> _tilesPos;
-    private Dictionary<Vector3, GameObject> _tiles;
 
     private TilesHolder _tilesHolder;
 
@@ -30,11 +29,10 @@ public class TileManager: MonoBehaviour
     public void OnEnable()
     {
         _tilesPos = new Queue<Vector3>();
-        _tiles = new Dictionary<Vector3, GameObject>();
 
         CreateTilesHolder();
 
-        var startPos = Vector3Int.CeilToInt(player.transform.position);
+        var startPos = Vector3Int.RoundToInt(player.transform.position);
         startPos.y = 0;
 
         AddTile(startPos, prefab);
@@ -53,15 +51,14 @@ public class TileManager: MonoBehaviour
         };
 
         _tilesHolder = tilesHolder.AddComponent<TilesHolder>();
+        _tilesHolder.Innit();
     }
 
     public void AddTile(Vector3 pos, GameObject prefab)
     {
-        var tile = Instantiate(prefab, pos, Quaternion.identity, _tilesHolder.transform);
-        tile.name = $"Tile {pos}";
-
         _tilesPos.Enqueue(pos);
-        _tiles.Add(pos, tile);
+        _tilesHolder.CreateTile(pos, prefab);
+
     }
 
     public void DeleteFirstTile()
@@ -72,10 +69,7 @@ public class TileManager: MonoBehaviour
         }
 
         var tilePos = _tilesPos.Dequeue();
-        var tile = _tiles[tilePos];
-        _tiles.Remove(tilePos);
-
-        Destroy(tile);
+        _tilesHolder.HideTile(tilePos);
     }
 
     public void Generate(int count)
