@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, IController
 {
     private IMovable _movement;
+    private PlayerInput _playerInput;
 
     private readonly Vector3[] _moveDirections =
     {
@@ -16,16 +18,16 @@ public class PlayerController : MonoBehaviour, IController
     public void OnEnable()
     {
         _movement = GetComponent<IMovable>();
+        _playerInput = GetComponent<PlayerInput>();
+
+        _playerInput.OnClick += ChangeDirection;
+
+        ChangeDirection();
     }
 
     public void Update()
     {
-        _movement?.Move(Input.GetAxis("Vertical"));
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ChangeDirection();
-        }
+        _movement?.Move(1f);
     }
 
     public void ChangeDirection()
@@ -34,5 +36,11 @@ public class PlayerController : MonoBehaviour, IController
 
         var newDirection = _moveDirections[_currentDirectionIndex];
         _movement?.ChangeDirection(newDirection);
+    }
+
+    private void OnDestroy()
+    {
+        if(_playerInput != null)
+            _playerInput.OnClick -= ChangeDirection;
     }
 }

@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
-using UnityEditor.Search;
 using UnityEngine;
 
 public class TilesHolder: MonoBehaviour 
 {
-    private Dictionary<string, Queue<GameObject>> _inactiveTilesPools;
+    private Dictionary<string, Queue<GameObject>> _initializedTilesPools;
     private Dictionary<Vector3, GameObject> _activeTilesByPosition;
 
     public void Innit()
     {
         _activeTilesByPosition = new();
-        _inactiveTilesPools = new();
+        _initializedTilesPools = new();
     }
 
     public GameObject CreateTile(Vector3 position, GameObject prefab)
@@ -21,10 +20,10 @@ public class TilesHolder: MonoBehaviour
             HideTile(position);
         }
 
-        if(!_inactiveTilesPools.TryGetValue(prefab.name, out var pool))
+        if(!_initializedTilesPools.TryGetValue(prefab.name, out var pool))
         {
             pool = new Queue<GameObject>();
-            _inactiveTilesPools.Add(prefab.name, pool);
+            _initializedTilesPools.Add(prefab.name, pool);
         }
 
         GameObject tile;
@@ -101,4 +100,30 @@ public class TilesHolder: MonoBehaviour
         return tile ;
     }
 
+    public void DestroyTiles()
+    {
+        if (_initializedTilesPools == null) return;
+
+        foreach (var tilePools in _initializedTilesPools)
+        {
+            if (tilePools.Value == null) continue;
+
+            foreach (var tile in tilePools.Value)
+            {
+                if(tile != null)
+                    Destroy(tile);
+            }
+        }
+    }
+
+    public void Clear()
+    {
+        DestroyTiles();
+
+        _initializedTilesPools.Clear();
+        _initializedTilesPools.TrimExcess();
+
+        _activeTilesByPosition.Clear();
+        _activeTilesByPosition.TrimExcess();
+    }
 }

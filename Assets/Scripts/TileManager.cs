@@ -4,20 +4,22 @@ using System.Linq;
 using UnityEngine;
 using System.Collections;
 using Random = UnityEngine.Random;
+using static UnityEngine.Rendering.DebugUI;
 
 public class TileManager: MonoBehaviour
 {
     private Queue<Vector3> _tilesPos;
+    private Dictionary<Vector3, GameObject> _collectableItem; 
 
     private TilesHolder _tilesHolder;
     private Vector3 _lastTilePosition;
 
     [SerializeField] private GameObject prefab;
+    [SerializeField] private GameObject collectableItemPrefab;
     [SerializeField] private Player player;
 
     [SerializeField] private float distanceForDeleteTiles = 6f;
     [SerializeField] private float distanceForCreateTiles = 8f;
-
 
 
     private readonly Vector3[] _moveDirections =
@@ -28,7 +30,8 @@ public class TileManager: MonoBehaviour
 
     public void OnEnable()
     {
-        _tilesPos = new Queue<Vector3>();
+        _tilesPos = new ();
+        _collectableItem = new();
 
         CreateTilesHolder();
 
@@ -36,6 +39,11 @@ public class TileManager: MonoBehaviour
         startPos.y = 0;
 
         AddTile(startPos, prefab);
+        AddTile(new Vector3Int(0, 0, 1), prefab);
+        AddTile(new Vector3Int(0, 0, 2), prefab);
+        AddTile(new Vector3Int(0, 0, 3), prefab);
+        AddTile(new Vector3Int(0, 0, 4), prefab);
+        AddTile(new Vector3Int(0, 0, 5), prefab);
         Generate(16);
     }
 
@@ -59,6 +67,20 @@ public class TileManager: MonoBehaviour
         _tilesPos.Enqueue(pos);
         _tilesHolder.CreateTile(pos, prefab);
         _lastTilePosition = pos;
+
+        if(Random.Range(0, 10) < 3)
+        {
+            CreateCollectableItem(pos);
+        }
+    }
+
+    public void CreateCollectableItem(Vector3 tilePos)
+    {
+        if(collectableItemPrefab != null)
+        {
+            var item = Instantiate(collectableItemPrefab, tilePos + Vector3.up, Quaternion.identity);
+            _collectableItem.Add(tilePos, item);
+        }
     }
 
     public void DeleteFirstTile()
@@ -70,6 +92,12 @@ public class TileManager: MonoBehaviour
 
         var tilePos = _tilesPos.Dequeue();
         _tilesHolder.HideTile(tilePos);
+
+        if (_collectableItem.TryGetValue(tilePos, out var item))
+        {
+            Destroy(item);
+        }
+        _collectableItem.Remove(tilePos);
     }
 
     public void Generate(int count)
@@ -85,7 +113,11 @@ public class TileManager: MonoBehaviour
 
     public void Update()
     {
-        if(_tilesPos != null && _tilesPos.Count != 0)
+        var playerTilePos = Vector3Int.RoundToInt(player.transform.position);
+        playerTilePos.y = 0;
+
+
+        if (_tilesPos != null && _tilesPos.Count != 0)
         {
             if (Vector3.Distance(_tilesPos.Peek(), player.transform.position) > distanceForDeleteTiles) 
             {
@@ -100,7 +132,32 @@ public class TileManager: MonoBehaviour
             {
                 Generate(1);
             }
-
         }
     }
+
+    public void DestroyCollectableItems()
+    {
+        foreach(var pair in _collectableItem)
+        {
+            if(pair.Value != null)
+            {
+                Destroy(pair.Value);
+            }
+        }
+        _collectableItem.Clear();
+    }
+
+    public void Destroy()
+    {
+        _tilesHolder.Clear();
+        _tilesPos.Clear();
+        DestroyCollectableItems();
+
+        _tilesHolder.gameObject.SetActive(false);
+        this.gameObject.SetActive(false);
+
+        //Destroy(gameObject);
+    }
+
+
 }
