@@ -11,7 +11,6 @@ public class Player: MonoBehaviour
     public PlayerEvent OnPlayerWalk;
 
     private IMovable _movement;
-    private ICollidable _collision;
 
     private void OnTriggerEnter(Collider other)
     {

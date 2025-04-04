@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour, IController
+public class PlayerController : MonoBehaviour
 {
     private IMovable _movement;
     private PlayerInput _playerInput;

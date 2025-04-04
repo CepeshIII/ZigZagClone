@@ -18,8 +18,8 @@ public static class RequiredAudioMethods
         audioSource.volume = volume;
         audioSource.Play();
 
-        GameObjectDestroyer gameObjectDestroyer = (GameObjectDestroyer)gameObject.AddComponent(typeof(GameObjectDestroyer));
-        gameObjectDestroyer.Innit((x) => { return x.isPlaying; }, audioSource);
+        var destroyer = (ConditionalDestroyer)gameObject.AddComponent(typeof(ConditionalDestroyer));
+        destroyer.Initialize(x => x.isPlaying, audioSource);
     }
 
 }

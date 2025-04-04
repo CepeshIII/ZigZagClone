@@ -6,6 +6,7 @@ public class MusicManager : Singleton
 {
     [SerializeField] private AudioSource _musicSource;
 
+
     void Start()
     {
         DontDestroyOnLoad(gameObject);
@@ -15,7 +16,6 @@ public class MusicManager : Singleton
 
     private void OnDestroy()
     {
-        Destroy(_musicSource);
         Destroy(gameObject);
     }
 }

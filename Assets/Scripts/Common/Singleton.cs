@@ -10,7 +10,7 @@ public class Singleton: MonoBehaviour
     public static Singleton Instance { get; private set; }
 
 
-    private void Awake()
+    private void OnEnable()
     {
         // If there is an instance, and it's not me, delete myself.
 

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
 using Random = UnityEngine.Random;
 
-public class TileManager: MonoBehaviour
+public class PathGenerator: MonoBehaviour
 {
-    private TilesHolder _tilesHolder;
+    private TilePoolManager _tilePoolManager;
 
     [SerializeField] private List<GameObject> tilePrefabs;
     [SerializeField] private List<GameObject> collectableItemPrefabs;
@@ -19,7 +16,7 @@ public class TileManager: MonoBehaviour
 
     private readonly Vector3Int[] _moveDirections =
     {
-        Vector3Int.forward,
+        Vector3Int.right,
         Vector3Int.forward,
     };
 
@@ -40,21 +37,21 @@ public class TileManager: MonoBehaviour
         playerTilePos.y = 0;
 
 
-        if (_tilesHolder != null)
+        if (_tilePoolManager != null)
         {
-            if (_tilesHolder.FirstActivateTile != null)
+            if (_tilePoolManager.FirstActivateTile != null)
             {
-                var distantToPathStart = Vector3.Distance(_tilesHolder.FirstActivateTile.position,
+                var distantToPathStart = Vector3.Distance(_tilePoolManager.FirstActivateTile.position,
                                             player.transform.position);
                 if (distantToPathStart > distanceForDeleteTiles)
                 {
-                    _tilesHolder.HideFirstTile();
+                    _tilePoolManager.HideFirstTile();
                 }
             }
 
-            if (_tilesHolder.LastActivateTile != null)
+            if (_tilePoolManager.LastActivateTile != null)
             {
-                var distantToEndStart = Vector3.Distance(_tilesHolder.LastActivateTile.position,
+                var distantToEndStart = Vector3.Distance(_tilePoolManager.LastActivateTile.position,
                                             player.transform.position);
                 if (distantToEndStart < distanceForCreateTiles)
                 {
@@ -74,26 +71,26 @@ public class TileManager: MonoBehaviour
 
     public void CreateTilesHolder()
     {
-        var tilesHolder = GameObject.FindGameObjectWithTag("TilesHolder");
+        var tilesHolder = GameObject.FindGameObjectWithTag("TilePoolManager");
         if(tilesHolder != null)
             Destroy(tilesHolder.gameObject);
 
-        tilesHolder = new GameObject("TilesHolder")
+        tilesHolder = new GameObject("TilePoolManager")
         {
-            tag = "TilesHolder"
+            tag = "TilePoolManager"
         };
 
-        _tilesHolder = tilesHolder.AddComponent<TilesHolder>();
-        _tilesHolder.Innit();
+        _tilePoolManager = tilesHolder.AddComponent<TilePoolManager>();
+        _tilePoolManager.Innit();
     }
 
     public void AddTile(Vector3Int pos, GameObject prefab)
     {
-        var lastTile = _tilesHolder.AddTile(pos, prefab);
+        var lastTile = _tilePoolManager.AddTile(pos, prefab);
 
         if(Random.Range(0, 10) < 3)
         {
-            _tilesHolder.AddCollectItem(lastTile, GetRandomInList(collectableItemPrefabs));
+            _tilePoolManager.AddCollectItem(lastTile, GetRandomInList(collectableItemPrefabs));
         }
     }
 
@@ -101,7 +98,7 @@ public class TileManager: MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            var lastPos = _tilesHolder.LastActivateTile.position;
+            var lastPos = _tilePoolManager.LastActivateTile.position;
             var newPos = lastPos + _moveDirections[Random.Range(0, 2)];
 
             AddTile(newPos, GetRandomInList(tilePrefabs));
@@ -115,13 +112,19 @@ public class TileManager: MonoBehaviour
 
     public void Destroy()
     {
-        _tilesHolder.Clear();
+        _tilePoolManager.Clear();
 
-        _tilesHolder.gameObject.SetActive(false);
+        _tilePoolManager.gameObject.SetActive(false);
         this.gameObject.SetActive(false);
 
-        Destroy(_tilesHolder.gameObject);
+        Destroy(_tilePoolManager.gameObject);
         Destroy(gameObject);
     }
 
+    private void OnDestroy()
+    {
+        if(_tilePoolManager!= null)
+            Destroy(_tilePoolManager.gameObject);
+
+    }
 }

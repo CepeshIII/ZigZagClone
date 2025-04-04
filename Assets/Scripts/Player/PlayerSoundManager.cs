@@ -2,7 +2,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.PlayerLoop;
-using static RequiredMethods;
 
 public class PlayerSoundManager : MonoBehaviour
 {
