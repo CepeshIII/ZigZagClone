@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Rendering;
@@ -17,16 +18,8 @@ public static class RequiredAudioMethods
         audioSource.volume = volume;
         audioSource.Play();
 
-        DestroyAfterPlay(audioSource);
+        GameObjectDestroyer gameObjectDestroyer = (GameObjectDestroyer)gameObject.AddComponent(typeof(GameObjectDestroyer));
+        gameObjectDestroyer.Innit((x) => { return x.isPlaying; }, audioSource);
     }
 
-    public static IEnumerator DestroyAfterPlay(AudioSource audioSource)
-    {
-        while (audioSource.isPlaying)
-        {
-            yield return null;
-        }
-
-        Object.Destroy(audioSource.gameObject);
-    }
 }

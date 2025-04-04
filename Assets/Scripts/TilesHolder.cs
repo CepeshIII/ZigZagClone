@@ -7,8 +7,10 @@ public class TilesHolder: MonoBehaviour
 {
     private Dictionary<string, Queue<Tile>> _initializedTilesPools;
     private Dictionary<string, List<GameObject>> _initializedCollectableItemLists;
+    private Dictionary<Vector3Int, Tile> _activeTilesByPosition;
 
-    private Dictionary<Vector3, Tile> _activeTilesByPosition;
+    private Transform _collectItemsParent;
+    private Transform _tilesParent;
 
     private Tile firstActivateTile;
     private Tile lastActivateTile;
@@ -17,14 +19,21 @@ public class TilesHolder: MonoBehaviour
     public Tile LastActivateTile {  get { return lastActivateTile; } }
 
 
+
     public void Innit()
     {
         _activeTilesByPosition = new();
         _initializedTilesPools = new();
         _initializedCollectableItemLists = new();
+
+        _tilesParent = new GameObject("Tiles parent").transform;
+        _collectItemsParent = new GameObject("Collect Items parent").transform;
+
+        _tilesParent.parent = this.transform;
+        _collectItemsParent.parent = this.transform;
     }
 
-    public Tile AddTile(Vector3 position, GameObject prefab)
+    public Tile AddTile(Vector3Int position, GameObject prefab)
     {
         //Check if position is busy
         if (_activeTilesByPosition.ContainsKey(position))
@@ -77,12 +86,11 @@ public class TilesHolder: MonoBehaviour
 
         if (TryFindInactiveCollectableItem(list, out var collectableItem))
         {
-            collectableItem.transform.position = tile.position + Vector3.up;
-            collectableItem.SetActive(true);
+            ActivateCollectableItem(collectableItem, tile.position);
         }
         else
         {
-            collectableItem = InstantiateCollectItem(tile.position + Vector3.up, prefab);
+            collectableItem = InstantiateCollectItem(tile.position, prefab);
             list.Add(collectableItem);
         }
 
@@ -91,7 +99,7 @@ public class TilesHolder: MonoBehaviour
         return collectableItem;
     }
 
-    public void HideTile(Vector3 position)
+    public void HideTile(Vector3Int position)
     {
         if (_activeTilesByPosition.TryGetValue(position, out var foundTile))
         {
@@ -99,7 +107,6 @@ public class TilesHolder: MonoBehaviour
             foundTile.Deactivate();
         }
     }
-
 
     private bool TryFindInactiveCollectableItem(List<GameObject> collectableItems, 
         out GameObject foundCollectableItem)
@@ -135,17 +142,26 @@ public class TilesHolder: MonoBehaviour
         }
     }
 
-    private Tile InstantiateTile(Vector3 position, GameObject prefab)
+    private Tile InstantiateTile(Vector3Int position, GameObject prefab)
     {
-        var tileObject = Instantiate(prefab, position, Quaternion.identity, transform);
+        var tileObject = Instantiate(prefab, position, Quaternion.identity, _tilesParent);
         var tile = new Tile(tileObject, position);
         return tile;
     }
 
-    public GameObject InstantiateCollectItem(Vector3 position, GameObject prefab)
+    public GameObject InstantiateCollectItem(Vector3Int position, GameObject prefab)
     {
-        var tileObject = Instantiate(prefab, position, Quaternion.identity, transform);
-        return tileObject;
+        var collectItem = Instantiate(prefab, _collectItemsParent);
+        ActivateCollectableItem(collectItem, position);
+
+        return collectItem;
+    }
+
+    public void ActivateCollectableItem(GameObject collectableItem, Vector3Int position)
+    {
+        collectableItem.SetActive(true);
+        collectableItem.name = $"CollectableItem: {position}";
+        collectableItem.transform.position = position + Vector3Int.up;
     }
 
     public void DestroyTiles()

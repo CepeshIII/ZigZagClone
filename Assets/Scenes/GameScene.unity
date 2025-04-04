@@ -167,7 +167,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
   _walkAudioSource: {fileID: 1163268684}
-  _collectItemAudioSource: {fileID: 0}
   _fallSoundAudioSource: {fileID: 2042377919}
 --- !u!114 &31476538 stripped
 MonoBehaviour:

@@ -19,7 +19,7 @@ public class TileManager: MonoBehaviour
 
     private readonly Vector3Int[] _moveDirections =
     {
-        Vector3Int.right,
+        Vector3Int.forward,
         Vector3Int.forward,
     };
 
@@ -64,7 +64,7 @@ public class TileManager: MonoBehaviour
         }
     }
 
-    public void GenerateLine(Vector3 startPos, Vector3Int direction, int length, GameObject prefab)
+    public void GenerateLine(Vector3Int startPos, Vector3Int direction, int length, GameObject prefab)
     {
         for(int i = 0; i < length; i++)
         {
@@ -76,7 +76,7 @@ public class TileManager: MonoBehaviour
     {
         var tilesHolder = GameObject.FindGameObjectWithTag("TilesHolder");
         if(tilesHolder != null)
-            Destroy(tilesHolder);
+            Destroy(tilesHolder.gameObject);
 
         tilesHolder = new GameObject("TilesHolder")
         {
@@ -87,7 +87,7 @@ public class TileManager: MonoBehaviour
         _tilesHolder.Innit();
     }
 
-    public void AddTile(Vector3 pos, GameObject prefab)
+    public void AddTile(Vector3Int pos, GameObject prefab)
     {
         var lastTile = _tilesHolder.AddTile(pos, prefab);
 
@@ -119,5 +119,9 @@ public class TileManager: MonoBehaviour
 
         _tilesHolder.gameObject.SetActive(false);
         this.gameObject.SetActive(false);
+
+        Destroy(_tilesHolder.gameObject);
+        Destroy(gameObject);
     }
+
 }

@@ -7,15 +7,14 @@ public class Tile
     public GameObject tileObject;
     public GameObject collectableItem;
 
-    public Vector3 position;
-
-    public Vector3 nextTilePos;
+    public Vector3Int position;
+    public Vector3Int nextTilePos;
 
     public bool IsActive => tileObject.activeSelf;
     public bool IsLastInPath = false;
 
 
-    public Tile(GameObject tileObject, Vector3 position)
+    public Tile(GameObject tileObject, Vector3Int position)
     {
         this.tileObject = tileObject;
         SetPosition(position);
@@ -28,23 +27,34 @@ public class Tile
         tileObject.name = name;
     }
 
-    private void SetPosition(Vector3 position)
+    private void SetPosition(Vector3Int position)
     {
         this.position = position;
         tileObject.transform.position = position;
     }
 
-    public void Activate(Vector3 newPosition)
+    public void Activate(Vector3Int newPosition)
     {
         SetPosition(newPosition);
         SetName($"Tile {position}"); ;
         tileObject.SetActive(true);
+        ResetParameters();
+    }
+
+    public void ResetParameters()
+    {
+        collectableItem = null;
+        nextTilePos = Vector3Int.zero;
+        IsLastInPath = false;
     }
 
     public void Deactivate()
     {
         tileObject.SetActive(false);
         if (collectableItem != null)
+        {
             collectableItem.SetActive(false);
+            collectableItem = null;
+        }
     }
 }
