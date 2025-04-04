@@ -1,21 +1,22 @@
+using Mono.Cecil;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
+using static RequiredAudioMethods;
 
 public class CollectableItem : MonoBehaviour
 {
-    [SerializeField] private AudioSource m_AudioSource;
+    [SerializeField] private AudioResource _audioResource;
+    [SerializeField] private AudioMixerGroup _audioMixerGroup;
 
-    private void OnEnable()
-    {
-        m_AudioSource = GetComponent<AudioSource>();
-    }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collider)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collider.gameObject.CompareTag("Player"))
         {
+            PlayResourcesAtPoint(_audioResource, transform.position, _audioMixerGroup);
             gameObject.SetActive(false);
-            m_AudioSource.Play();
-        }
+        }   
     }
 
 }

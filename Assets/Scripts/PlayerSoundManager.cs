@@ -9,21 +9,15 @@ public class PlayerSoundManager : MonoBehaviour
     [SerializeField] private Player _player;
 
     [SerializeField] private AudioSource _walkAudioSource;
-    [SerializeField] private AudioSource _collectItemAudioSource;
     [SerializeField] private AudioSource _fallSoundAudioSource;
 
     void OnEnable()
     {
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        _player.OnItemCollect += PlayCollectItemSound;
         _player.OnPlayerFall += PlayFallSound;
         _player.OnPlayerWalk += PlayWalkSound;
     }
 
-    private void PlayCollectItemSound()
-    {
-        _collectItemAudioSource?.Play();
-    }
 
     private void PlayWalkSound()
     {
@@ -45,8 +39,6 @@ public class PlayerSoundManager : MonoBehaviour
     {
         if (_player != null) 
         { 
-            if(_player.OnItemCollect != null)
-                _player.OnItemCollect -= PlayCollectItemSound;
 
             if (_player.OnPlayerFall != null)
                 _player.OnPlayerFall -= PlayWalkSound;
