@@ -1,12 +1,12 @@
-🌀 ZigZag Clone – Unity Game Project
+# **🌀 ZigZag Clone – Unity Game Project**
 
 This is a ZigZag-style runner game I created as part of the "Master C# Programming from A to Z" course — specifically in Section 26: UNITY - Building a Zig Zag Clone With Unity.
-🎮 Game Overview
+## __🎮 Game Overview__
 
 This project is a fast-paced runner where the player controls a warrior character navigating a narrow zigzag path. The player can switch the direction between two angles by tapping or clicking, challenging their timing and focus to avoid falling off.
 
 The project was built in Unity 6 (6000.0.25f1) using the Universal Render Pipeline (URP) for improved visuals and performance.
-🧰 Tools & Packages Used
+## __🧰 Tools & Packages Used__
 
     🎮 Unity 6.0 (6000.0.25f1)
 
@@ -22,7 +22,7 @@ The project was built in Unity 6 (6000.0.25f1) using the Universal Render Pipeli
 
     🖼️ Unity UI Toolkit
 
-🛠️ Key Features
+## __🛠️ Key Features__
 
     🧍 Warrior character as the player
 
@@ -38,13 +38,13 @@ The project was built in Unity 6 (6000.0.25f1) using the Universal Render Pipeli
 
     🎮 New Input System for responsive controls
 
-📸 Screenshots
+## __📸 Screenshots__
 
 ![image](https://github.com/user-attachments/assets/f42737c0-2bca-47da-b59d-bb34ba525b85)
 ![image](https://github.com/user-attachments/assets/c658edda-bd9e-47e7-8922-e690fe4cac5c)
 
 
-💡 What I Learned
+## __💡 What I Learned__
 
 This project helped me:
 
@@ -58,7 +58,7 @@ This project helped me:
 
     Work with prefabs, game states, and basic procedural generation
 
-🚀 How to Run
+## __🚀 How to Run__
 
     Clone or download this repository.
 
@@ -68,9 +68,9 @@ This project helped me:
 
     Click Play in the Unity Editor to start the game.
 
-✅ Project Status
+## __✅ Project Status__
 
 📌 Completed as part of the course curriculum. Ready to play and open for improvements or new features.
-🙌 Credits
+## __🙌 Credits__
 
 Big thanks to the creators of the "Master C# Programming from A to Z" course for a well-structured and practical learning experience!
