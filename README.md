@@ -1,24 +1,6 @@
 🌀 ZigZag Clone – Unity Game Project
 
 This is a ZigZag-style runner game I created as part of the "Master C# Programming from A to Z" course — specifically in Section 26: UNITY - Building a Zig Zag Clone With Unity.
-📚 About the Course
-
-The course covers a wide range of C# and .NET concepts, including:
-
-    C# (Beginner to Advanced)
-
-    Object-Oriented Programming (OOP)
-
-    Clean Code practices
-
-    .NET Framework
-
-    LINQ, WPF, Generics
-
-    Unit Testing
-
-    Game development with Unity
-
 🎮 Game Overview
 
 This project is a fast-paced runner where the player controls a warrior character navigating a narrow zigzag path. The player can switch the direction between two angles by tapping or clicking, challenging their timing and focus to avoid falling off.
