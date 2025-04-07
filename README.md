@@ -59,6 +59,8 @@ The project was built in Unity 6 (6000.0.25f1) using the Universal Render Pipeli
 📸 Screenshots
 
 ![image](https://github.com/user-attachments/assets/f42737c0-2bca-47da-b59d-bb34ba525b85)
+![image](https://github.com/user-attachments/assets/c658edda-bd9e-47e7-8922-e690fe4cac5c)
+
 
 💡 What I Learned
 
