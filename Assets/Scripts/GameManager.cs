@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class GameManager: MonoBehaviour
 {
     [SerializeField] Player player;
-    [SerializeField] PathGenerator tileManager;
+    [SerializeField] PathGenerator pathGenerator;
     [SerializeField] SceneLoader sceneLoader;
     [SerializeField] ScoreManager scoreManager;
 
@@ -17,9 +17,9 @@ public class GameManager: MonoBehaviour
             GameObject.FindGameObjectWithTag("Player")
                 .TryGetComponent<Player>(out player);
 
-        if (tileManager == null)
+        if (pathGenerator == null)
             GameObject.FindGameObjectWithTag("PathGenerator")
-                .TryGetComponent<PathGenerator>(out tileManager);
+                .TryGetComponent<PathGenerator>(out pathGenerator);
 
         if (scoreManager == null)
             GameObject.FindGameObjectWithTag("ScoreManager")
@@ -58,7 +58,7 @@ public class GameManager: MonoBehaviour
     {
         SavePlayerStats();
         sceneLoader.LoadMenuScene();
-        tileManager.Destroy();
+        pathGenerator.Destroy();
         isGameOver = true;
     }
 }

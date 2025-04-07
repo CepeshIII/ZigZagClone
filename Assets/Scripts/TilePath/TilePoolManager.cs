@@ -19,7 +19,6 @@ public class TilePoolManager: MonoBehaviour
     public Tile LastActivateTile {  get { return lastActivateTile; } }
 
 
-
     public void Innit()
     {
         _activeTilesByPosition = new();

@@ -190,8 +190,8 @@ GameObject:
   - component: {fileID: 55089752}
   - component: {fileID: 55089753}
   m_Layer: 0
-  m_Name: TileManager
-  m_TagString: TileManager
+  m_Name: PathGanerator
+  m_TagString: PathGenerator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -225,6 +225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilePrefabs:
   - {fileID: 8492012615922405587, guid: 5c37651ddb4a8544482ebe7739c0e6a9, type: 3}
+  - {fileID: 1923544664166940907, guid: 4b5a91b3dd1a774489ad2ee8c63e2697, type: 3}
   collectableItemPrefabs:
   - {fileID: 324053880582137526, guid: 6a5cbec3edd87fe4a8a9397ca185f5d8, type: 3}
   player: {fileID: 31476538}
@@ -623,9 +624,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  tileManager: {fileID: 0}
+  pathGenerator: {fileID: 0}
   sceneLoader: {fileID: 1704205114}
-  scoreManager: {fileID: 0}
+  scoreManager: {fileID: 2118087875}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1671,8 +1672,8 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 9021098873635727373}
   - {fileID: 55089752}
-  - {fileID: 785103055}
   - {fileID: 1704205113}
   - {fileID: 2118087874}
   - {fileID: 942200502}
   - {fileID: 930231065}
+  - {fileID: 785103055}
