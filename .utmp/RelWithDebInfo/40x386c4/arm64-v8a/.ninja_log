@@ -1,10 +1,19 @@
 # ninja log v5
 23	1428	7653010846309389	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	159ed479e6de1c71
 26	1503	7653010847039292	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	1c2bc522b026c5f5
-2	1515	7653010847286475	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	a0f2765f1d96a5a2
-32	1581	7653010847949381	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	3ea075f99a9d443b
 35	1622	7653010848352611	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	62886969b18c34ad
+2	1515	7653010847286475	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	a0f2765f1d96a5a2
 16	1692	7653010849108442	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	33e38396cec9c8f5
+32	1581	7653010847949381	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	3ea075f99a9d443b
+2000	2103	7653010853204259	D:/Users/CepeshIII/Documents/Unity projects/3D Game Developer 3D Course/ZigZagClone/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/40x386c4/obj/arm64-v8a/libgame.so	eac9f8942a476483
 29	1916	7653010851377263	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	13687e02c16daaa9
 20	1999	7653010852206613	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	9f908c08a07d27c6
-2000	2103	7653010853204259	D:/Users/CepeshIII/Documents/Unity projects/3D Game Developer 3D Course/ZigZagClone/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/40x386c4/obj/arm64-v8a/libgame.so	eac9f8942a476483
+10	906	7660772399724607	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	1c2bc522b026c5f5
+28	907	7660772399757421	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	a0f2765f1d96a5a2
+37	914	7660772399834954	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	159ed479e6de1c71
+32	937	7660772400093692	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	3ea075f99a9d443b
+40	999	7660772400745189	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	62886969b18c34ad
+7	1044	7660772401170274	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	33e38396cec9c8f5
+34	1190	7660772402654666	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	13687e02c16daaa9
+13	1305	7660772403756528	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	9f908c08a07d27c6
+1305	1452	7660772405230537	D:/Users/CepeshIII/Documents/Unity projects/3D Game Developer 3D Course/ZigZagClone/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/40x386c4/obj/arm64-v8a/libgame.so	eac9f8942a476483

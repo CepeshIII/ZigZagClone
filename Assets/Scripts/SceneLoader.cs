@@ -7,6 +7,16 @@ using UnityEngine.SocialPlatforms;
 
 internal class SceneLoader: MonoBehaviour
 {
+
+    private void Start()
+    {
+        if (Application.isMobilePlatform)
+        {
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = 60;
+        }
+    }
+
     public void LoadMenuScene()
     {
         StartCoroutine(LoadAsyncScene(0));
