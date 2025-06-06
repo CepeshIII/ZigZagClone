@@ -60,6 +60,16 @@ This project helped me:
 
 ## __🚀 How to Run__
 
+    In Browser:
+
+    Open the project on Itch.io:
+    
+    👉 https://cepeshiii.itch.io/zigzagclone
+
+    Click the "Run Game" button to start playing directly in your browser.
+
+    In Unity: 
+    
     Clone or download this repository.
 
     Open the project in Unity 6.0 (6000.0.25f1) or newer.
