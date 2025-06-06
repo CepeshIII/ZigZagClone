@@ -90,7 +90,7 @@ public class PathGenerator: MonoBehaviour
 
         if(Random.Range(0, 10) < 3)
         {
-            _tilePoolManager.AddCollectItem(lastTile, GetRandomInList(collectableItemPrefabs));
+            _tilePoolManager.AddCacheObject(lastTile, GetRandomInList(collectableItemPrefabs));
         }
     }
 

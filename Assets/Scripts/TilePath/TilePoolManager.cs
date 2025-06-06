@@ -1,15 +1,55 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+
+
+public class CacheObject
+{
+    private bool isFree;
+    private GameObject gameObject;
+
+    public GameObject GameObject => gameObject;
+    public bool IsFree => isFree;
+
+    public void SetGameObject(GameObject newGameObject)
+    {
+        gameObject = newGameObject;
+    }
+
+    public void Update(string name, Vector3 position) 
+    {
+        gameObject.name = name;
+        gameObject.transform.position = position;
+    }
+
+    public void ToRelease()
+    {
+        isFree = true;
+    }
+
+    public void ToReserve()
+    {
+        isFree = false;
+    }
+
+    public void Activate()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Deactivate()
+    {
+        gameObject.SetActive(false);
+    }
+}
 
 
 public class TilePoolManager: MonoBehaviour 
 {
     private Dictionary<string, Queue<Tile>> _initializedTilesPools;
-    private Dictionary<string, List<GameObject>> _initializedCollectableItemLists;
+    private Dictionary<string, List<CacheObject>> _initializedCacheObjectsLists;
     private Dictionary<Vector3Int, Tile> _activeTilesByPosition;
 
-    private Transform _collectItemsParent;
+    private Transform _cacheObjectsParent;
     private Transform _tilesParent;
 
     private Tile firstActivateTile;
@@ -23,13 +63,13 @@ public class TilePoolManager: MonoBehaviour
     {
         _activeTilesByPosition = new();
         _initializedTilesPools = new();
-        _initializedCollectableItemLists = new();
+        _initializedCacheObjectsLists = new();
 
         _tilesParent = new GameObject("Tiles parent").transform;
-        _collectItemsParent = new GameObject("Collect Items parent").transform;
+        _cacheObjectsParent = new GameObject("Cache Objects parent").transform;
 
         _tilesParent.parent = this.transform;
-        _collectItemsParent.parent = this.transform;
+        _cacheObjectsParent.parent = this.transform;
     }
 
     public Tile AddTile(Vector3Int position, GameObject prefab)
@@ -75,27 +115,32 @@ public class TilePoolManager: MonoBehaviour
         return tile;
     }
 
-    public GameObject AddCollectItem(Tile tile, GameObject prefab)
+    public CacheObject AddCacheObject(Tile tile, GameObject prefab)
     {
-        if (!_initializedCollectableItemLists.TryGetValue(prefab.name, out var list))
+        if (!_initializedCacheObjectsLists.TryGetValue(prefab.name, out var list))
         {
             list = new();
-            _initializedCollectableItemLists.Add(prefab.name, list);
+            _initializedCacheObjectsLists.Add(prefab.name, list);
         }
 
-        if (TryFindInactiveCollectableItem(list, out var collectableItem))
+        if (TryFindFreeCacheObject(list, out var cacheObject))
         {
-            ActivateCollectableItem(collectableItem, tile.position);
+            ActivateCacheObject(cacheObject, tile.position);
         }
         else
         {
-            collectableItem = InstantiateCollectItem(tile.position, prefab);
-            list.Add(collectableItem);
+            cacheObject = CreateCacheObject(tile.position, prefab);
+            list.Add(cacheObject);
         }
+        ReserveCacheObject(tile, cacheObject);
 
-        tile.collectableItem = collectableItem;
+        return cacheObject;
+    }
 
-        return collectableItem;
+    public void ReserveCacheObject(Tile tile, CacheObject cacheObject)
+    {
+        tile.cacheObject = cacheObject;
+        cacheObject.ToReserve();
     }
 
     public void HideTile(Vector3Int position)
@@ -107,15 +152,15 @@ public class TilePoolManager: MonoBehaviour
         }
     }
 
-    private bool TryFindInactiveCollectableItem(List<GameObject> collectableItems, 
-        out GameObject foundCollectableItem)
+    private bool TryFindFreeCacheObject(List<CacheObject> cacheObjects, 
+        out CacheObject foundCacheObject)
     {
-        foundCollectableItem = null;
-        foreach (var collectableItem in collectableItems)
+        foundCacheObject = null;
+        foreach (var cacheObject in cacheObjects)
         {
-            if (!collectableItem.activeSelf)
+            if (cacheObject.IsFree)
             {
-                foundCollectableItem = collectableItem;
+                foundCacheObject = cacheObject;
                 return true;
             }
         }
@@ -148,19 +193,21 @@ public class TilePoolManager: MonoBehaviour
         return tile;
     }
 
-    public GameObject InstantiateCollectItem(Vector3Int position, GameObject prefab)
+    public CacheObject CreateCacheObject(Vector3Int position, GameObject prefab)
     {
-        var collectItem = Instantiate(prefab, _collectItemsParent);
-        ActivateCollectableItem(collectItem, position);
+        var gameObject = Instantiate(prefab, _cacheObjectsParent);
+        var cacheObject = new CacheObject();
 
-        return collectItem;
+        cacheObject.SetGameObject(gameObject);
+        ActivateCacheObject(cacheObject, position);
+
+        return cacheObject;
     }
 
-    public void ActivateCollectableItem(GameObject collectableItem, Vector3Int position)
+    public void ActivateCacheObject(CacheObject cacheObject, Vector3Int position)
     {
-        collectableItem.SetActive(true);
-        collectableItem.name = $"CollectableItem: {position}";
-        collectableItem.transform.position = position + Vector3Int.up;
+        cacheObject.Activate();
+        cacheObject.Update($"CacheObject: {position}", position + Vector3Int.up);
     }
 
     public void DestroyTiles()
@@ -193,23 +240,27 @@ public class TilePoolManager: MonoBehaviour
         }
     }
 
-    public void DestroyCollectableItems()
+    public void DestroyCacheObjects()
     {
-        foreach (var keys in _initializedCollectableItemLists.Keys)
+        foreach (var keys in _initializedCacheObjectsLists.Keys)
         {
-            foreach (var collectableItem in _initializedCollectableItemLists[keys])
+            foreach (var cacheObject in _initializedCacheObjectsLists[keys])
             {
-                if (collectableItem != null)
-                    Destroy(collectableItem);
+                if (cacheObject != null){
+                    if( cacheObject.GameObject != null)
+                    {
+                        Destroy(cacheObject.GameObject);
+                    }
+                }
             }
         }
-        _initializedCollectableItemLists.Clear();
+        _initializedCacheObjectsLists.Clear();
     }
 
     public void Clear()
     {
         DestroyTiles();
-        DestroyCollectableItems();
+        DestroyCacheObjects();
 
         _initializedTilesPools.Clear();
         _initializedTilesPools.TrimExcess();

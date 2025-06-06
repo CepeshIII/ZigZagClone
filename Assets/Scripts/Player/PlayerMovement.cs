@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour, IMovable
     [SerializeField] private float _runningSpeed = 10f;
 
     [SerializeField] private float _angularSpeed = 5f;
+    [SerializeField] private float _startFallTimer = 1f;
 
     [SerializeField] private bool _isRunning = false;
 
@@ -38,7 +39,7 @@ public class PlayerMovement : MonoBehaviour, IMovable
         _animator = GetComponentInChildren<Animator>();
         _collider = GetComponent<CapsuleCollider>();
         _forwardDirection = transform.forward;
-        _animator.SetBool("Falling", _isFalling);
+        _animator.SetBool("Falling", true);
 
         if(PlayerPrefs.GetInt("IsPlayerShouldRun") == 1)
         {
@@ -52,6 +53,14 @@ public class PlayerMovement : MonoBehaviour, IMovable
 
     private void FixedUpdate()
     {
+        if (_startFallTimer > 0) 
+        {
+            _startFallTimer -= Time.deltaTime;
+            _animator.SetBool("Falling", true);
+            _isFalling = true;
+        }
+
+
         if (!_isFalling)
         {
             _rb.MoveRotation(Quaternion.RotateTowards(_rb.rotation, Quaternion.LookRotation(_forwardDirection), _angularSpeed));
@@ -92,6 +101,8 @@ public class PlayerMovement : MonoBehaviour, IMovable
 
     public void CheckIfFalling()
     {
+        if (_startFallTimer > 0) return;
+
         var isFalling = Mathf.Abs(_rb.linearVelocity.y) > 1f;
         var startToFall = isFalling && !_isFalling;
         var stopFalling = !isFalling && _isFalling;

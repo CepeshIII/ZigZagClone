@@ -5,7 +5,7 @@ public class Tile
     public string Name;
 
     public GameObject tileObject;
-    public GameObject collectableItem;
+    public CacheObject cacheObject;
 
     public Vector3Int position;
     public Vector3Int nextTilePos;
@@ -43,7 +43,7 @@ public class Tile
 
     public void ResetParameters()
     {
-        collectableItem = null;
+        cacheObject = null;
         nextTilePos = Vector3Int.zero;
         IsLastInPath = false;
     }
@@ -51,10 +51,11 @@ public class Tile
     public void Deactivate()
     {
         tileObject.SetActive(false);
-        if (collectableItem != null)
+        if (cacheObject != null)
         {
-            collectableItem.SetActive(false);
-            collectableItem = null;
+            cacheObject.Deactivate();
+            cacheObject.ToRelease();
+            cacheObject = null;
         }
     }
 }
